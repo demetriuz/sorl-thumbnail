@@ -1,20 +1,19 @@
 # -*- encoding: utf8 -*-
-from sorl import __version__, __author__, __maintainer__, __email__, __license__
 from setuptools import setup, find_packages
 from setuptools.command.test import test
 
 
-class TestCommand(test):
-    def run(self):
-        from tests.runtests import runtests
-
-        runtests()
+__author__ = "Mikko Hellsing"
+__license__ = "BSD"
+__version__ = '0.0'
+__maintainer__ = "Mario César Señoranis Ayala"
+__email__ = "mariocesar@creat1va.com"
 
 
 setup(
-    name='sorl-thumbnail',
+    name='pythonthumbnail',
     version=__version__,
-    description='Thumbnails for Django',
+    description='Thumbnails for Python',
     long_description=open('README.rst').read(),
     author=__author__,
     author_email='mikko@aino.se',
@@ -36,8 +35,5 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Multimedia :: Graphics',
-        'Framework :: Django',
-    ],
-    cmdclass={"test": TestCommand},
+    ]
 )
-
