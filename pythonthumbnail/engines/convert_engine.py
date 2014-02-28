@@ -1,16 +1,10 @@
 from __future__ import with_statement
 import re
-
 import os
-
 import subprocess
-
-from django.utils.datastructures import SortedDict
-from django.utils.encoding import smart_str
+from pythonthumbnail.helpers import SortedDict
 from pythonthumbnail.base import EXTENSIONS
-from pythonthumbnail.conf import settings
 from pythonthumbnail.engines.base import EngineBase
-
 from tempfile import NamedTemporaryFile
 
 
@@ -26,11 +20,11 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        if (options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)):
+        if (options['format'] == 'JPEG' and options.get('progressive', self.thumbnail_progressive)):
             image['options']['interlace'] = 'line'
         image['options']['quality'] = options['quality']
 
-        args = settings.THUMBNAIL_CONVERT.split(' ')
+        args = self.thumbnail_convert.split(' ')
         args.append(image['source'] + '[0]')
 
         for k in image['options']:
@@ -43,14 +37,14 @@ class Engine(EngineBase):
         if 'flatten' in options:
             flatten = options['flatten']
 
-        if settings.THUMBNAIL_FLATTEN and not flatten == "off":
+        if self.thumbnail_flatten and not flatten == "off":
             args.append('-flatten')
 
         suffix = '.%s' % EXTENSIONS[options['format']]
 
         with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
             args.append(fp.name)
-            args = map(smart_str, args)
+            args = map(str, args)
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             out, err = p.communicate()
@@ -76,7 +70,7 @@ class Engine(EngineBase):
         Returns the image width and height as a tuple
         """
         if image['size'] is None:
-            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args = self.thumbnail_identify.split(' ')
             args.append(image['source'])
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
@@ -92,7 +86,7 @@ class Engine(EngineBase):
         with NamedTemporaryFile(mode='wb') as fp:
             fp.write(raw_data)
             fp.flush()
-            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args = self.thumbnail_identify.split(' ')
             args.append(fp.name)
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             retcode = p.wait()
@@ -102,8 +96,8 @@ class Engine(EngineBase):
         #return image
         # XXX need to get the dimensions right after a transpose.
 
-        if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
-            args = settings.THUMBNAIL_IDENTIFY.split()
+        if self.thumbnail_convert.endswith('gm convert'):
+            args = self.thumbnail_identify.split()
             args.extend(['-format', '%[exif:orientation]', image['source']])
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()

@@ -1,7 +1,6 @@
 import json
 import re
 from pythonthumbnail.helpers import LazyObject, empty
-# from pythonthumbnail.conf import settings
 from pythonthumbnail.compat import urlopen, urlparse, urlsplit, \
     quote, quote_plus, \
     URLError, encode

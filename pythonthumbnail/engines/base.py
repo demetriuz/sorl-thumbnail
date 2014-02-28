@@ -1,5 +1,4 @@
 #coding=utf-8
-from pythonthumbnail.conf import settings
 from pythonthumbnail.helpers import toint
 from pythonthumbnail.parsers import parse_crop
 from pythonthumbnail.parsers import parse_cropbox
@@ -9,6 +8,16 @@ class EngineBase(object):
     """
     ABC for Thumbnail engines, methods are static
     """
+
+    def __init__(self, thumbnail_orientation=True, thumbnail_progressive=False, thumbnail_convert='convert',
+                 thumbnail_identify='identify', thumbnail_flatten=False):
+
+        self.thumbnail_orientation = thumbnail_orientation
+        self.thumbnail_progressive = thumbnail_progressive
+        self.thumbnail_convert = thumbnail_convert
+        self.thumbnail_identify = thumbnail_identify
+        self.thumbnail_flatten = thumbnail_flatten
+
 
     def create(self, image, geometry, options):
         """
@@ -38,7 +47,7 @@ class EngineBase(object):
         """
         Wrapper for ``_orientation``
         """
-        if options.get('orientation', settings.THUMBNAIL_ORIENTATION):
+        if options.get('orientation', self.thumbnail_orientation):
             return self._orientation(image)
         return image
 
@@ -119,7 +128,7 @@ class EngineBase(object):
         quality = options['quality']
         image_info = options['image_info']
         # additional non-default-value options:
-        progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
+        progressive = options.get('progressive', self.thumbnail_progressive)
         raw_data = self._get_raw_data(
             image, format_, quality,
             image_info=image_info,
