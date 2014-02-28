@@ -20,20 +20,8 @@ setup(
     maintainer=__maintainer__,
     maintainer_email=__email__,
     license=__license__,
-    url='https://github.com/mariocesar/sorl-thumbnail',
+    url='https://github.com/demetriuz/python-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
-    zip_safe=False,
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Web Environment',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Multimedia :: Graphics',
-    ]
+    zip_safe=False
 )
