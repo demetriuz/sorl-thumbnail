@@ -1,9 +1,4 @@
 import hashlib
-
-# from django.core.exceptions import ImproperlyConfigured
-# from django.utils.encoding import smart_text
-# from django.utils.importlib import import_module
-# from pythonthumbnail.helpers import import_module
 import json
 from pythonthumbnail.compat import encode
 import sys
@@ -151,8 +146,6 @@ def import_module(name, package=None):
         name = _resolve_name(name[level:], package, level)
     __import__(name)
     return sys.modules[name]
-
-
 
 
 #----- SortedDict

@@ -9,8 +9,6 @@ from pythonthumbnail.helpers import ThumbnailError, \
 from pythonthumbnail.parsers import parse_geometry
 from pythonthumbnail.storage import Storage, ContentFile, File
 
-url_pat = re.compile(r'^(https?|ftp):\/\/')
-
 
 def serialize_image_file(image_file):
     if image_file.size is None:
@@ -63,8 +61,6 @@ class BaseImageFile(object):
     def url(self):
         raise NotImplemented()
 
-    src = url
-
 
 class ImageFile(BaseImageFile):
     _size = None
@@ -78,17 +74,12 @@ class ImageFile(BaseImageFile):
             self.name = file_.name
         else:
             self.name = unicode(file_)
-            #self.name = force_unicode(file_)
 
         # figure out storage
         if storage is not None:
             self.storage = storage
         elif hasattr(file_, 'storage'):
             self.storage = file_.storage
-        # elif url_pat.match(self.name):
-        #     self.storage = UrlStorage()
-        # else:
-        #     self.storage = default_storage
 
     def __unicode__(self):
         return self.name
@@ -108,19 +99,11 @@ class ImageFile(BaseImageFile):
             # Storage backends can implement ``image_size`` method that
             # optimizes this.
             size = self.storage.image_size(self.name)
-        # else:
-        #     # This is the worst case scenario
-        #     image = default.engine.get_image(self)
-        #     size = default.engine.get_image_size(image)
         self._size = list(size)
 
     @property
     def size(self):
         return self._size
-
-    # @property
-    # def url(self):
-    #     return self.storage.url(self.name)
 
     def read(self):
         return self.storage.open(self.name).read()
@@ -131,9 +114,7 @@ class ImageFile(BaseImageFile):
 
         self._size = None
         self.name = self.storage.save(self.name, content)
-        #
         return self.name
-        # return 'asdasd'
 
     def delete(self):
         return self.storage.delete(self.name)
@@ -155,20 +136,3 @@ class ImageFile(BaseImageFile):
 
     def serialize(self):
         return serialize_image_file(self)
-
-
-# class DummyImageFile(BaseImageFile):
-#     def __init__(self, geometry_string):
-#         self.size = parse_geometry(
-#             geometry_string,
-#             settings.THUMBNAIL_DUMMY_RATIO,
-#         )
-#
-#     def exists(self):
-#         return True
-#
-#     @property
-#     def url(self):
-#         return settings.THUMBNAIL_DUMMY_SOURCE % (
-#             {'width': self.x, 'height': self.y}
-#         )

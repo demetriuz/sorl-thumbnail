@@ -1,11 +1,9 @@
 import logging
-
 import os
 import re
 from pythonthumbnail.compat import string_type
-# from pythonthumbnail.conf import settings  #, defaults as default_settings
 from pythonthumbnail.helpers import tokey, serialize
-from pythonthumbnail.images import ImageFile  #, DummyImageFile
+from pythonthumbnail.images import ImageFile
 from pythonthumbnail.parsers import parse_geometry
 
 
@@ -47,9 +45,6 @@ class ThumbnailBackend(object):
         self.thumbnail_prefix = thumbnail_prefix
         self.thumbnail_format = thumbnail_format
 
-    # def __init__(self, **options):
-    #     self.options = options
-
     def file_extension(self, file_):
         return os.path.splitext(file_.name)[1].lower()
 
@@ -62,8 +57,6 @@ class ThumbnailBackend(object):
             return 'PNG'
         else:
             return self.thumbnail_format
-            # from django.conf import settings
-            # return getattr(settings, 'THUMBNAIL_FORMAT')
 
     def get_thumbnail(self, file_, geometry_string, **options):
         """
@@ -75,34 +68,14 @@ class ThumbnailBackend(object):
                      geometry_string)
         if file_:
             source = ImageFile(file_, storage=self.storage)
-        # elif settings.THUMBNAIL_DUMMY:
-        #     return DummyImageFile(geometry_string)
         else:
             return None
-
-        #preserve image filetype
-        # if settings.THUMBNAIL_PRESERVE_FORMAT:
-        #     options.setdefault('format', self._get_format(file_))
 
         for key, value in self.default_options.items():
             options.setdefault(key, value)
 
-        # For the future I think it is better to add options only if they
-        # differ from the default settings as below. This will ensure the same
-        # filenames being generated for new options at default.
-        # for key, attr in self.extra_options:
-        #     value = getattr(settings, attr)
-            # if value != getattr(default_settings, attr):
-            #     options.setdefault(key, value)
         name = self._get_thumbnail_filename(source, geometry_string, options)
         thumbnail = ImageFile(name, self.storage)
-        # cached = default.kvstore.get(thumbnail)
-        # if cached:
-        #     return cached
-        # else:
-        # We have to check exists() because the Storage backend does not
-        # overwrite in some implementations.
-        # so we make the assumption that if the thumbnail is not cached, it doesn't exist
         try:
             source_image = self.engine.get_image(source)
         except IOError:
