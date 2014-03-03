@@ -3,23 +3,14 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test
 
 
-__author__ = "Mikko Hellsing"
-__license__ = "BSD"
-__version__ = '0.0'
-__maintainer__ = "Mario César Señoranis Ayala"
-__email__ = "mariocesar@creat1va.com"
-
-
 setup(
     name='pythonthumbnail',
-    version=__version__,
+    version='0.0',
     description='Thumbnails for Python',
     long_description=open('README.rst').read(),
-    author=__author__,
-    author_email='mikko@aino.se',
-    maintainer=__maintainer__,
-    maintainer_email=__email__,
-    license=__license__,
+    author='Dmitry Lazarko',
+    author_email='alt0064@gmail.com',
+    license='BSD',
     url='https://github.com/demetriuz/python-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
